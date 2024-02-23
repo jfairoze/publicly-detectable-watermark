@@ -1,0 +1,10 @@
+__pycache__/
+.env
+.python-version
+.vscode/
+*.csv
+*.log
+*.pickle
+*.png
+*.txt
+data/
