@@ -94,6 +94,7 @@ def generate_text(args: argparse.Namespace) -> str:
             model,
             tokenizer,
             args.sample_type,
+            args.message_length,
             args.signature_segment_length,
             args.bit_size,
             args.max_planted_errors,
@@ -317,6 +318,7 @@ def generate_text_asymmetric(
     model: AutoModelForCausalLM,
     tokenizer: AutoTokenizer,
     sample_type: str,
+    message_length: int,
     signature_segment_length: int,
     bit_size: int,
     max_planted_errors: int,
@@ -333,8 +335,6 @@ def generate_text_asymmetric(
     int,
 ]:
     """Generate text using the asymmetric algorithm and return the generated text, tokens, public key, public parameters, token count, and number of planted errors."""
-
-    message_length = crypto.get_message_length(signature_segment_length, bit_size)
 
     vocab_size = len(tokenizer)
     inputs = tokenizer.encode(
@@ -906,6 +906,12 @@ if __name__ == "__main__":
         default="params.pickle",
         type=str,
         help="the path for the params pickle file; if a file already exists at this path, it will be loaded and reused",
+    )
+    parser.add_argument(
+        "--message-length",
+        default=crypto.DEFAULT_MESSAGE_LENGTH,
+        type=int,
+        help="the length of the message in characters. The default value is signature-segment-length // bit-size",
     )
     parser.add_argument(
         "--signature-segment-length",

@@ -72,6 +72,7 @@ def search_for_asymmetric_watermark(
     pk: G2Elem,
     params: tuple,
     text: str,
+    message_length: int,
     signature_segment_length: int,
     bit_size: int,
     max_planted_errors: int,
@@ -85,6 +86,7 @@ def search_for_asymmetric_watermark(
             pk,
             params,
             rotated_text,
+            message_length,
             signature_segment_length,
             bit_size,
             max_planted_errors,
@@ -97,6 +99,7 @@ def detect_asymmetric_watermark(
     pk: G2Elem,
     params: tuple,
     text: str,
+    message_length: int,
     signature_segment_length: int,
     bit_size: int,
     max_planted_errors: int,
@@ -104,8 +107,6 @@ def detect_asymmetric_watermark(
     """Check one window of the text for an asymmetric watermark."""
 
     try:
-        message_length = crypto.get_message_length(signature_segment_length, bit_size)
-
         message = text[:message_length]
         message_hash = hashlib.sha256(bytes(message, "utf-8")).digest()
 

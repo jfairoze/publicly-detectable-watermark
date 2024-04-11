@@ -15,15 +15,11 @@ REED_SOLO_CONSTANT: int = 8
 # Constants for asymmetric watermarking
 DEFAULT_SIGNATURE_SEGMENT_LENGTH: int = 16
 DEFAULT_BIT_SIZE: int = 2
+DEFAULT_MESSAGE_LENGTH: int = DEFAULT_SIGNATURE_SEGMENT_LENGTH // DEFAULT_BIT_SIZE
 DEFAULT_MAX_PLANTED_ERRORS: int = 2
 
 # Constant for symmetric watermarking
 DEFAULT_SECURITY_PARAMETER: int = 16
-
-
-def get_message_length(signature_segment_length: int, bit_size: int) -> int:
-    """Message length is signature segment length divided by bit size."""
-    return signature_segment_length // bit_size
 
 
 def get_signature_codeword_length(max_planted_errors: int, bit_size: int) -> int:

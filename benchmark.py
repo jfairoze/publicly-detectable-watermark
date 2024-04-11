@@ -34,6 +34,7 @@ MODEL_COL = "Model"
 TOKENIZER_COL = "Tokenizer"
 SAMPLE_TYPE_COL = "Sample Type"
 SECURITY_PARAMETER_COL = "Sec Param"
+MESSAGE_LENGTH_COL = "Message Len"
 SIGNATURE_LENGTH_COL = "Sig Len"
 SIGNATURE_SEGMENT_LENGTH_COL = "Sig Seg Len"
 BIT_SIZE_COL = "Bit Size"
@@ -86,6 +87,7 @@ def benchmark(args: argparse.Namespace) -> None:
             tokenizer_name,
             sample_type,
             security_parameter,
+            message_length,
             signature_length,
             signature_segment_length,
             bit_size,
@@ -105,7 +107,7 @@ def benchmark(args: argparse.Namespace) -> None:
 
         # Read in benchmark csv and skip inputs that have already been benchmarked at least num_samples_per_input times.
         model_name_for_file = model_name.replace("/", "-")
-        file_suffix = f"model={model_name_for_file}_sample-type={sample_type}_security-parameter={security_parameter}_signature-length={crypto.SIGNATURE_LENGTH}_signature-segment-length={signature_segment_length}_bit-size={bit_size}_max-planted-errors={max_planted_errors}"
+        file_suffix = f"model={model_name_for_file}_sample-type={sample_type}_security-parameter={security_parameter}_message-length={message_length}_signature-length={crypto.SIGNATURE_LENGTH}_signature-segment-length={signature_segment_length}_bit-size={bit_size}_max-planted-errors={max_planted_errors}"
         benchmark_file_name = f"benchmark_{file_suffix}.csv"
         benchmark_file_path = f"{BENCHMARK_DIRECTORY}/{benchmark_file_name}"
 
@@ -156,6 +158,7 @@ def benchmark(args: argparse.Namespace) -> None:
                     model,
                     tokenizer,
                     sample_type,
+                    message_length,
                     signature_length,
                     signature_segment_length,
                     bit_size,
@@ -210,6 +213,7 @@ def benchmark(args: argparse.Namespace) -> None:
                 TOKENIZER_COL,
                 SAMPLE_TYPE_COL,
                 SECURITY_PARAMETER_COL,
+                MESSAGE_LENGTH_COL,
                 SIGNATURE_LENGTH_COL,
                 SIGNATURE_SEGMENT_LENGTH_COL,
                 BIT_SIZE_COL,
@@ -274,6 +278,7 @@ def benchmark_plain(
         tokenizer.name_or_path,
         sample_type,
         np.nan,  # No security parameter for plain
+        np.nan,  # No message length for plain
         np.nan,  # No signature length for plain
         np.nan,  # No signature segment length for plain
         np.nan,  # No bit size for plain
@@ -313,6 +318,7 @@ def benchmark_plain_with_bits(
         tokenizer.name_or_path,
         sample_type,
         np.nan,  # No security parameter for plain with bits
+        np.nan,  # No message length for plain with bits
         np.nan,  # No signature length for plain with bits
         np.nan,  # No signature segment length for plain with bits
         np.nan,  # No bit size for plain with bits
@@ -368,6 +374,7 @@ def benchmark_symmetric(
         tokenizer.name_or_path,
         sample_type,
         security_parameter,
+        np.nan,  # No message length for symmetric
         np.nan,  # No signature length for symmetric
         np.nan,  # No signature segment length for symmetric
         np.nan,  # No bit size for symmetric
@@ -384,6 +391,7 @@ def benchmark_symmetric(
         tokenizer.name_or_path,
         sample_type,
         security_parameter,
+        np.nan,  # No message length for symmetric
         np.nan,  # No signature length for symmetric
         np.nan,  # No signature segment length for symmetric
         np.nan,  # No bit size for symmetric
@@ -400,6 +408,7 @@ def benchmark_asymmetric(
     model: AutoModelForCausalLM,
     tokenizer: AutoTokenizer,
     sample_type: str,
+    message_length: int,
     signature_length: int,
     signature_segment_length: int,
     bit_size: int,
@@ -434,6 +443,7 @@ def benchmark_asymmetric(
                 model,
                 tokenizer,
                 sample_type,
+                message_length,
                 signature_segment_length,
                 bit_size,
                 max_planted_errors,
@@ -464,6 +474,7 @@ def benchmark_asymmetric(
         pk,
         params,
         generated_text,
+        message_length,
         signature_segment_length,
         bit_size,
         max_planted_errors,
@@ -481,6 +492,7 @@ def benchmark_asymmetric(
             tokenizer.name_or_path,
             sample_type,
             np.nan,  # No security parameter for asymmetric
+            message_length,
             signature_length,
             signature_segment_length,
             bit_size,
@@ -498,6 +510,7 @@ def benchmark_asymmetric(
             tokenizer.name_or_path,
             sample_type,
             np.nan,  # No security parameter for asymmetric
+            message_length,
             signature_length,
             signature_segment_length,
             bit_size,
@@ -566,6 +579,7 @@ def get_inputs(
             args.model,
             args.sample_type,
             args.security_parameter,
+            args.message_length,
             crypto.SIGNATURE_LENGTH,
             args.signature_segment_length,
             args.bit_size,
@@ -632,6 +646,12 @@ if __name__ == "__main__":
         default=crypto.DEFAULT_SECURITY_PARAMETER,
         type=float,
         help="the security parameter for symmetric generation and detection",
+    )
+    parser.add_argument(
+        "--message-length",
+        default=crypto.DEFAULT_MESSAGE_LENGTH,
+        type=int,
+        help="the length of the message in characters",
     )
     parser.add_argument(
         "--signature-segment-length",
