@@ -32,6 +32,7 @@ def main(args: argparse.Namespace) -> None:
             pk,
             params,
             text,
+            args.message_length,
             args.signature_segment_length,
             args.bit_size,
             args.max_planted_errors,
@@ -172,6 +173,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--params", default=None, type=str, help="the input path to params pickle file"
+    )
+    parser.add_argument(
+        "--message-length",
+        default=crypto.DEFAULT_MESSAGE_LENGTH,
+        type=int,
+        help="the length of the message in characters. The default value is signature-segment-length // bit-size",
     )
     parser.add_argument(
         "--signature-segment-length",
