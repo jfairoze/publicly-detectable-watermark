@@ -1,4 +1,4 @@
-# Publicly Detectable Watermarking for Language Models
+# Publicly-Detectable Watermarking for Language Models
 
 This is the implementation for our paper [Publicly-Detectable Watermarking for Language Models](https://arxiv.org/abs/2310.18491).
 All information that can be found in the paper was produced using this codebase.
