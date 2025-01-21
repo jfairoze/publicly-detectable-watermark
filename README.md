@@ -112,3 +112,7 @@ Run all unit tests with:
 ```bash
 python -m unittest
 ```
+
+## Disclaimer
+
+THIS SOFTWARE AND/OR DATA WAS DEPOSITED IN THE BAIR OPEN RESEARCH COMMONS REPOSITORY ON 2025/01/21.
